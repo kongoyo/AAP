@@ -9,7 +9,7 @@
 
   tasks:
     - name: Run the CL command to create a library
-      ibmi_cl_command:
+      ibm.power_ibmi.ibmi_cl_command:
         cmd: crtlib lib(ansiblei)
       register: crt_lib_result
 

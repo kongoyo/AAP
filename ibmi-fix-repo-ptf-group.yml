@@ -1,0 +1,85 @@
+# Copyright (c) IBM Corporation 2019, 2020
+# Apache License, Version 2.0 (see https://opensource.org/licenses/Apache-2.0)
+
+# ibmi-fix-repo-ptf-group.yml
+# Provide an example on how to manipulate the PTF database with PTF groups
+---
+- name: Playbook example of using PTF groups with a repository
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Tasks performing PTF group operations
+      block:
+        - name: Task fetch_some_group_info_from_web
+          ibm.power_ibmi.ibmi_fix_group_check:
+            groups:
+              - "SF99738"
+          register: group_info
+
+        - name: Task display_group_info
+          ansible.builtin.debug:
+            msg: "{{ group_info.count }} group info returned"
+
+        - name: Task add_group_info_records
+          ibm.power_ibmi.ibmi_fix_repo:
+            action: "add"
+            type: "ptf_group"
+            checksum: false
+            parameters:
+              - {
+                "ptf_group_number": "{{ group_info.group_info[0].ptf_group_number }}",
+                "ptf_group_level": "{{ group_info.group_info[0].ptf_group_level }}",
+                "ptf_list": "{{ group_info.group_info[0].ptf_list }}",
+                "release_date": "{{ group_info.group_info[0].release_date }}",
+              }
+          register: add_group_info_records
+
+        - name: Task query_group_info_records
+          ibm.power_ibmi.ibmi_fix_repo:
+            action: "find"
+            type: "ptf_group"
+            parameters:
+              - { "ptf_group_number": "SF99738" }
+          register: group_info_records
+
+        - name: Task display_query_group_info_records
+          ansible.builtin.debug:
+            msg: "{{ group_info_records.success_list | length }} records returned"
+
+        - name: Task change_group_info_records
+          ibm.power_ibmi.ibmi_fix_repo:
+            action: "update"
+            type: "ptf_group"
+            checksum: true
+            parameters:
+              - {
+                "order_id": "2434037762",
+                "file_path": "/QIBM/UserData/OS/Service/ECS/PTF/2434037762",
+                "ptf_group_number": "{{ group_info.group_info[0].ptf_group_number }}",
+                "ptf_group_level": "{{ group_info.group_info[0].ptf_group_level }}",
+                "release_date": "{{ group_info.group_info[0].release_date }}",
+              }
+          register: change_group_info_records
+
+        - name: Task display_change_group_info_records
+          ansible.builtin.debug:
+            msg: "{{ change_group_info_records }}"
+
+        - name: Task query_updated_group_info_records
+          ibm.power_ibmi.ibmi_fix_repo:
+            action: "find"
+            type: "ptf_group"
+            parameters:
+              - { "ptf_group_number": "SF99738" }
+          register: query_updated_group_info_records
+
+        - name: Task display_updated_group_info_records
+          ansible.builtin.debug:
+            msg: "{{ query_updated_group_info_records }}"
+
+      always:
+        - name: Task drop_the_table
+          ibm.power_ibmi.ibmi_fix_repo:
+            action: "clear"
+            type: "ptf_group"

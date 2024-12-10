@@ -9,5 +9,5 @@
   
   tasks:
     - name: Run the CL command to delete the library
-      ansible.builtin.ping:
-        data: "172.16.14.61"
+      ansible.netcommon.net_ping:
+        dest: 172.16.14.61

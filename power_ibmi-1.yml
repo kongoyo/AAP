@@ -4,14 +4,12 @@
 - name: Playbook with CL command examples
   hosts: all
   gather_facts: false
-  collections:
-    - ibm.power_ibmi
   
   tasks:
     - name: Ping IBMi
-      ansible.builtin.ping:
+      ibm.power_ibmi.ping:
         data: "172.16.14.61" 
 
     - name: Ping IBM i 
-      ansible.builtin.ping:
+      ibm.power_ibmi.ping:
         data: "172.16.13.58"        

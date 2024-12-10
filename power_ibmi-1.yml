@@ -10,4 +10,8 @@
   tasks:
     - name: Ping IBMi
       ansible.builtin.ping:
-        data: "172.16.14.61"          
+        data: "172.16.14.61" 
+
+    - name: Ping IBM i 
+      ansible.builtin.ping:
+        data: "172.16.13.58"        

@@ -5,7 +5,8 @@
   hosts: all
   gather_facts: false
   collections:
-    - ibm.power_ibmi
+    - name: ibm.power_ibmi
+      source: https://galaxy.ansible.com
 
   tasks:
     - name: Run the CL command to create a library

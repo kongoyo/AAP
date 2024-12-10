@@ -9,6 +9,5 @@
   
   tasks:
     - name: Run the CL command to delete the library
-      ibmi_cl_command:
-        cmd: dltlib ansiblei
-        joblog: false
+      ansible.builtin.ping:
+        data: "172.16.14.61"

@@ -28,7 +28,7 @@
         - name: Scan PTF info from image root
           ibm.power_ibmi.ibmi_fix_repo_lv1:
             action: "refresh"
-            image_root: "/qibm/userdata/os/service/ecs/ptf/2434558157"
+            image_root: "/QIBM/UserData/OS/Service/ECS/PTF/2434558157"
           register: scanning_info
 
         - name: Task display_scanning_info

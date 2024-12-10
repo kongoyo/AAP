@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   collections:
-    - name: ibm.power_ibmi      
+    - ibm.power_ibmi      
 
   tasks:
     - name: Run the CL command to create a library

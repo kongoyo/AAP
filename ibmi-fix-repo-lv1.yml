@@ -25,7 +25,7 @@
       ansible.builtin.include_role:
         name: fix_repo_download_add_ptf_group
       vars:
-        fix_repo_download_add_ptf_group_ptf_group_info.ptf_group_number: "SF99750"
+        ptf_id: "SF99750"
 
     # Role for fix_repo_download_add_ptf_group
     # Call ibm.power_ibmi.ibmi_download_fix module to download ptf group,

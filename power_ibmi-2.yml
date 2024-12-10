@@ -1,0 +1,26 @@
+---
+- name: Check PTF Group Status for *CUMGRP
+  hosts: all
+  gather_facts: false
+  collections:
+    - ibm.power_ibmi
+
+  tasks:
+    - name: Run SNDPTFORD command to check *CUMGRP PTF group
+      ibmi_cl_command:
+        cmd: "SNDPTFORD PTFGRP(*CUMGRP)"
+      register: ptf_check_result
+
+    - name: Display PTF check results
+      debug:
+        var: ptf_check_result.stdout_lines
+
+    - name: Check job log for any errors
+      ibmi_job_log:
+        number_of_lines: 50
+      register: job_log
+
+    - name: Display job log if there were any issues
+      debug:
+        var: job_log.job_log
+      when: job_log.job_log is defined and job_log.job_log | length > 0

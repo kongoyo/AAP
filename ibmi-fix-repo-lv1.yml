@@ -18,7 +18,7 @@
             parameters:
               - {
                 "order_id": "2434558054",
-                "file_path": "/QIBM/UserData/OS/Service/ECS/PTF/2434558054",
+                "file_path": "/QIBM/UserData/OS/Service/ECS/PTF/2434558157",
                 "download_status": "downloading",
               }
           register: dsps_param_result_0

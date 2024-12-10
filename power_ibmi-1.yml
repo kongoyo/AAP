@@ -10,8 +10,4 @@
   tasks:
     - name: Ping IBMi
       ansible.builtin.ping:
-        data: "172.16.14.61"
-
-    - name: Run CL command
-      ibm.power_ibmi.ibmi_cl_command:
-      
+        data: "172.16.14.61"          

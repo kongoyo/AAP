@@ -4,69 +4,17 @@
 # ibmi-fix-repo-lv1.yml
 # Provide example for manipulating a level 1 PTF database
 ---
-- name: Playbook example using level 1 fix repository
+- name: Playbook example for IBM i fix management
   hosts: all
   gather_facts: false
+  collections:
+    - ibm.power_ibmi
 
   tasks:
-    - name: Tasks manipulating the PTF database
-      block:
-        - name: Add some download status records
-          ibm.power_ibmi.ibmi_fix_repo:
-            action: "add"
-            type: "download_status"
-            parameters:
-              - {
-                "order_id": "2434558157",
-                "file_path": "/QIBM/UserData/OS/Service/ECS/PTF/2434558157",
-                "download_status": "downloading",
-              }
-          register: dsps_param_result_0
-
-    - name: Tasks to exercise ibmi_fix_repo_lv1
-      block:
-        - name: Scan PTF info from image root
-          ibm.power_ibmi.ibmi_fix_repo_lv1:
-            action: "refresh"
-            image_root: "/QIBM/UserData/OS/Service/ECS/PTF/2434558157"
-          register: scanning_info
-
-        - name: Task display_scanning_info
-          ansible.builtin.debug:
-            msg: "{{ scanning_info.row_changed }} records added"
-
-        - name: Query all PTF info from database
-          ibm.power_ibmi.ibmi_fix_repo_lv1:
-            action: "list"
-            additional_sql: 'WHERE image_type IS NOT "cum" ORDER BY download_date DESC'
-          register: query_result
-
-        - name: Display all PTF info from database
-          ansible.builtin.debug:
-            msg: "{{ query_result.success_list }}"
-
-        - name: Find image info from database
-          ibm.power_ibmi.ibmi_fix_repo_lv1:
-            action: "find"
-            checksum: true
-            # additional_sql: 'WHERE image_type = "single_ptf" ORDER BY download_date DESC'
-            additional_sql: "ORDER BY ordered_ptf_count"
-            fields:
-              - "image_type"
-              - "image_path"
-              - "ordered_ptf_count"
-            parameters:
-              - { "group": "SF99704", "level": 19 }
-              - { "group": "SF99876" }
-              - { "shipped_ptf": "SI50077" }
-              - { "ptf": "SI77631" }
-          register: find_result
-
-        - name: Display find result
-          ansible.builtin.debug:
-            msg: "{{ find_result }}"
-
-      always:
-        - name: Task drop_the_table
-          ibm.power_ibmi.ibmi_fix_repo_lv1:
-            action: "clear"
+    - name: Include IBM i role fix_repo_check_ptf_group
+      ansible.builtin.include_role:
+        name: ibm.power_ibmi.fix_repo_check_ptf_group
+    
+    - name: Task drop_the_table
+      ibm.power_ibmi.ibmi_fix_repo_lv1:
+        action: "clear"

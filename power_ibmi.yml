@@ -1,12 +1,9 @@
-# Copyright (c) IBM Corporation 2019, 2020
-# Apache License, Version 2.0 (see https://opensource.org/licenses/Apache-2.0)
 ---
 - name: Playbook with CL command examples
   hosts: all
   gather_facts: false
   collections:
-    - name: ibm.power_ibmi
-      source: https://galaxy.ansible.com
+    - name: ibm.power_ibmi      
 
   tasks:
     - name: Run the CL command to create a library

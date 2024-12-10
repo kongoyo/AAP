@@ -8,6 +8,10 @@
     - ibm.power_ibmi
   
   tasks:
-    - name: Run the CL command to delete the library
+    - name: Ping IBMi
       ansible.builtin.ping:
         data: "172.16.14.61"
+
+    - name: Run CL command
+      ibm.power_ibmi.ibmi_cl_command:
+      

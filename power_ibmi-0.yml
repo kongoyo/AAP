@@ -23,7 +23,7 @@
         msg: 
           - "cmd: {{ crt_lib_repeated_result.cmd }}"
           - "msgid: {{ crt_lib_repeated_result.job_log[0].MESSAGE_ID }}"
-          - "msgtype: {{ crt_lib_repeated_result.joblog[0].MESSAGE_TYPE }}"
+          - "msgtype: {{ crt_lib_repeated_result.job_log[0].MESSAGE_TYPE }}"
           - "msgtxt: {{ crt_lib_repeated_result.job_log[0].MESSAGE_TEXT }}"
 
     - name: Assert the repeating creation of the library failed
@@ -42,6 +42,6 @@
         msg:
           - "cmd: {{ dlt_lib_result.cmd }}"
           - "msgid: {{ dlt_lib_result.job_log[0].MESSAGE_ID }}"
-          - "msgtype: {{ dlt_lib_result.joblog[0].MESSAGE_TYPE }}"
+          - "msgtype: {{ dlt_lib_result.job_log[0].MESSAGE_TYPE }}"
           - "msgtxt: {{ dlt_lib_result.job_log[0].MESSAGE_TEXT }}"
 

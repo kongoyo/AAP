@@ -27,29 +27,30 @@
       ansible.builtin.include_role:
         name: fix_repo_check_ptf_group
 
-#    - name: Block for when ptf group to download
-#      when: fix_repo_check_ptf_group_ptf_group_find_result.fail_list is not defined or
-#              fix_repo_check_ptf_group_download_status_find_result.fail_list is not defined
-#      block:
-#        - name: End play when no ptf group need to be downloaded
-#          ansible.builtin.debug:
-#            msg: "PTF group information is already in catalog or is already downloading, quit play"
-#
-#        - name: End host
-#          ansible.builtin.meta: end_host
-#
-#    - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
-#      ansible.builtin.include_role:
-#        name: fix_repo_download_add_ptf_group
-#      vars:
-#        fix_repo_download_add_ptf_group_ptf_group_info: "{{ fix_repo_check_ptf_group_fix_group_check_result.group_info[0] }}"
-#
-#    - name: Print msg
-#      ansible.builtin.debug:
-#        msg: |
-#            "After order {{ fix_repo_download_add_ptf_group_download_fix_result.order_id }} is complete, \
-#             call fix_repo_extract_ptf_group_info role to extract ptf group information into catalog."
-  
+    - name: Block for when ptf group to download
+      when: fix_repo_check_ptf_group_ptf_group_find_result.fail_list is not defined or
+              fix_repo_check_ptf_group_download_status_find_result.fail_list is not defined
+      block:
+        - name: End play when no ptf group need to be downloaded
+          ansible.builtin.debug:
+            msg: "PTF group information is already in catalog or is already downloading, quit play"
+
+        - name: End host
+          ansible.builtin.meta: end_host
+
+    - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
+      ansible.builtin.include_role:
+        name: fix_repo_download_add_ptf_group
+      vars:
+        fix_repo_download_add_ptf_group_ptf_group_info: "{{ fix_repo_check_ptf_group_fix_group_check_result.group_info[0] }}"
+
+    - name: Print msg
+      ansible.builtin.debug:
+        msg: |
+            "After order {{ fix_repo_download_add_ptf_group_download_fix_result.order_id }} is complete, \
+             call fix_repo_extract_ptf_group_info role to extract ptf group information into catalog."
+
+  post_tasks:
     - name: Install fixes to the target IBM i system by image catalog
       ibm.power_ibmi.ibmi_fix_imgclg:
         src: '{{ fix_repo_check_ptf_group_download_status_find_result.success_list[0].file_path }}'

@@ -1,3 +1,6 @@
+# Parameter example:
+# 'download_fix_status_order_list': 'Order_list_number'
+
 ---
 - name: Check fix download status
   hosts: all
@@ -14,3 +17,9 @@
         order_list: '{{ download_fix_status_order_list }}'
         become_user: "QSECOFR"
         become_user_password: "PASSWORD"
+      register: {{ download_fix_status_info }}
+
+    - name: Display fix downloading check status
+      ansible.builtin.debug:
+        msg: '{{ download_fix_status_info }}'
+

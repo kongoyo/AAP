@@ -1,5 +1,6 @@
-# Command example:
-  # ansible-playbook ./check_download_ptf_group.yml -e "{'repo_server': 'reposerver', 'ptf_group': 'SF99663'}"
+# Parameter example:
+# 'repo_server': 'IP Addr'
+# 'ptf_group': 'SF99663'
 
 ---
 - name: Get the latest PTF group information from PSP website, and download ptf group

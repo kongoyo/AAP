@@ -1,3 +1,6 @@
+# Parameter example:
+# 'fix_install_path': 'fix_path'
+
 ---
 - name: Install fixes by image catalog
   hosts: all

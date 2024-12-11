@@ -21,8 +21,8 @@
     - name: Display crtlib again debug message text
       ansible.builtin.debug:
         msg: 
-          - "STDOUT: {{ crt_lib_repeated_result.stdout }}"
-          - "STDERR: {{ crt_lib_repeated_result.stderr }}"
+          - "STDOUT: {{ crt_lib_repeated_result.stdout_lines }}"
+          - "STDERR: {{ crt_lib_repeated_result.stderr_lines }}"
 
     - name: Assert the repeating creation of the library failed
       ansible.builtin.assert:
@@ -38,6 +38,6 @@
     - name: Display dltlib debug message text
       ansible.builtin.debug:
         msg:
-          - "STDOUT: {{ dlt_lib_result.stdout }}"
-          - "STDERR: {{ dlt_lib_result.stderr }}"
-          
+          - "STDOUT: {{ dlt_lib_result.stdout_lines }}"
+          - "STDERR: {{ dlt_lib_result.stderr_lines }}"
+

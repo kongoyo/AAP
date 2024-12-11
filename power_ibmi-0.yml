@@ -14,7 +14,7 @@
     check_ptf_groups_against_fix_repo_type: "current"
     check_ptf_groups_against_fix_repo_repo_server: "172.16.14.61"
 
-    ptf_group_number: "{{ ptf_group_number }}"      
+    ptf_group_number: "{{ ptf_group_number }}"
 
   tasks:
     - name: IBM i check a set of groups
@@ -49,7 +49,7 @@
         msg: "{{ module_authority_check_return.authority_result }}"
 
     - name: Run the CL command to create a library
-      ibmi_cl_command:
+      ibm.power_ibmi.ibmi_cl_command:
         cmd: crtlib lib(ansiblei)
         joblog: true
       register: crt_lib_result

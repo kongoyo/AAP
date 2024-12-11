@@ -21,3 +21,8 @@
         rollback: True
         become_user: "QSECOFR"
         become_user_password: "PASSWORD"
+      register: fix_install_path_info
+
+    - name: Display selected fixes installed information
+      ansible.builtin.debug:
+        msg: '{{ fix_install_path_info }}'

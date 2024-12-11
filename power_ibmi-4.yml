@@ -13,11 +13,11 @@
 
   tasks:
     - name: Install a list of PTFs of LPP 5733SC1 from image catalog
-    ibm.power_ibmi.ibmi_fix_imgclg:
-      src: '{{ fix_install_path }}'
-      apply_type: '*DLYALL'
-      hiper_only: False
-      use_temp_path: True
-      rollback: True
-      become_user: "QSECOFR"
-      become_user_password: "PASSWORD"
+      ibm.power_ibmi.ibmi_fix_imgclg:
+        src: '{{ fix_install_path }}'
+        apply_type: '*DLYALL'
+        hiper_only: False
+        use_temp_path: True
+        rollback: True
+        become_user: "QSECOFR"
+        become_user_password: "PASSWORD"

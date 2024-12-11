@@ -11,6 +11,14 @@
         cmd: crtlib lib(ansiblei)
       register: crt_lib_result
 
+    - name: Display crtlib debug message text
+      ansible.builtin.debug:
+        msg: 
+          - "cmd: {{ crt_lib_result.cmd }}"
+          - "msgid: {{ crt_lib_result.job_log[0].MESSAGE_ID }}"
+          - "msgtype: {{ crt_lib_result.job_log[0].MESSAGE_TYPE }}"
+          - "msgtxt: {{ crt_lib_result.job_log[0].MESSAGE_TEXT }}"      
+
     - name: Run the CL command to create the library again
       ibmi_cl_command:
         cmd: crtlib lib(ansiblei)

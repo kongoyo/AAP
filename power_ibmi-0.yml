@@ -15,14 +15,14 @@
       ibmi_cl_command:
         cmd: crtlib lib(ansiblei)
         joblog: true
-      register: crt_lib_repeated_result.joblog
+      register: crt_lib_repeated_result
       ignore_errors: true
 
     - name: Display crtlib again debug message text
       ansible.builtin.debug:
         msg: 
-          - "STDOUT: {{ crt_lib_repeated_result.stdout_lines }}"
-          - "STDERR: {{ crt_lib_repeated_result.stderr_lines }}"
+          - "cmd: {{ crt_lib_repeated_result.cmd }}"
+          - "msgtxt: {{ crt_lib_repeated_result.joblog[0].MESSAGE_TEXT }}"
 
     - name: Assert the repeating creation of the library failed
       ansible.builtin.assert:

@@ -1,23 +1,15 @@
 # Copyright (c) IBM Corporation 2019, 2020
 # Apache License, Version 2.0 (see https://opensource.org/licenses/Apache-2.0)
 
-# Description:
-  # The sample file is to provide an example about how to compare the ptf groups between repo server and IBM i.
-
-# Parameters:
-  # repo_server   -- The IBM i server which can use SNDPTFORD to download and store PTF and PTF group install files.
-  # target_system -- The target IBM i server which needs to be compared with repo server.
-  # group_list    -- The PTF group list
-
-# Command example:
-  # ansible-playbook ./ibmi_fix_group_compare.yml -e "{'group_list':['SF99xxx','SF99yyy'], 'target_system': 'target', 'repo_server': 'reposerver'}"
 ---
-- name: Playbook to compare ptf groups between the repo server and target IBM i
-  hosts: '{{ target_system | default([]) }}'
+- name: Install fixes by image catalog
+  hosts: all
   gather_facts: false
+  collections:
+    - ibm.power_ibmi
 
   vars:
-    fix_install_path: ""
+    fix_install_path: "{{ fix_install_path }}"
 
   tasks:
     - name: Install a list of PTFs of LPP 5733SC1 from image catalog

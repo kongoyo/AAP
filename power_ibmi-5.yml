@@ -21,5 +21,5 @@
 
     - name: Display fix downloading check status
       ansible.builtin.debug:
-        msg: "{{ download_fix_status_info.msg.status[0].download_status }}"
+        msg: "{{ download_fix_status_info.status[0].download_status }}"
 

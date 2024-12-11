@@ -12,7 +12,7 @@
       - "SF99958"
       - "SF99957"
     check_ptf_groups_fix_repo_type: "current"
-    check_ptf_groups_fix_repo_repo_server: "172.16.14.61"
+    check_ptf_groups_fix_repo_repo_server: 172.16.14.61
 
     ptf_group_number: "{{ ptf_group_number }}"      
 

@@ -9,6 +9,7 @@
     - name: Run the CL command to create a library
       ibmi_cl_command:
         cmd: crtlib lib(ansiblei)
+        joblog: true
       register: crt_lib_result
 
     - name: Display crtlib debug message text

@@ -1,0 +1,51 @@
+# Copyright (c) IBM Corporation 2019, 2020
+# Apache License, Version 2.0 (see https://opensource.org/licenses/Apache-2.0)
+
+# Description:
+  # This playbook is used for 2st level solution. It will get the latest PTF group information from the IBM PSP website,
+  # and check if the latest PTF group already in the repository server. If not, download the latest PTF group and write
+  # download information into the download_status table and part of the PTF group information into the ptf_group_image_info table in the PTF database.
+
+# Parameters:
+  # repo_server -- The IBM i server which can use SNDPTFORD to download and store PTF and PTF group install files.
+  # ptf_group   -- The PTF group number which will be checked and downloaded.
+
+# Command example:
+  # ansible-playbook ./check_download_ptf_group.yml -e "{'repo_server': 'reposerver', 'ptf_group': 'SF99663'}"
+---
+- name: Get the latest PTF group information from PSP website, and download ptf group
+  hosts: "{{ repo_server | default([]) }}"
+  gather_facts: false
+  collections:
+    - ibm.power_ibmi
+
+  vars:
+    fix_repo_check_ptf_group_ptf_group: "{{ ptf_group }}"
+
+  tasks:
+    - name: Include fix_repo_check_ptf_group role to check if the latest ptf group is already in catalog
+      ansible.builtin.include_role:
+        name: fix_repo_check_ptf_group
+
+    - name: Block for when ptf group to download
+      when: fix_repo_check_ptf_group_ptf_group_find_result.fail_list is not defined or
+              fix_repo_check_ptf_group_download_status_find_result.fail_list is not defined
+      block:
+        - name: End play when no ptf group need to be downloaded
+          ansible.builtin.debug:
+            msg: "PTF group information is already in catalog or is already downloading, quit play"
+
+        - name: End host
+          ansible.builtin.meta: end_host
+
+    - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
+      ansible.builtin.include_role:
+        name: fix_repo_download_add_ptf_group
+      vars:
+        fix_repo_download_add_ptf_group_ptf_group_info: "{{ fix_repo_check_ptf_group_fix_group_check_result.group_info[0] }}"
+
+    - name: Print msg
+      ansible.builtin.debug:
+        msg: |
+            "After order {{ fix_repo_download_add_ptf_group_download_fix_result.order_id }} is complete, \
+             call fix_repo_extract_ptf_group_info role to extract ptf group information into catalog."

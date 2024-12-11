@@ -1,0 +1,16 @@
+---
+- name: Check fix download status
+  hosts: all
+  gather_facts: false
+  collections:
+    ibm.power_ibmi
+
+  vars:
+    download_fix_status_order_list: '{{ download_fix_status_order_list }}'
+
+  tasks:
+    - name: Checking whether the fix downloading complete
+      ibmi_download_fix_status:
+        order_list: '{{ download_fix_status_order_list }}'
+        become_user: "QSECOFR"
+        become_user_password: "PASSWORD"

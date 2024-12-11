@@ -17,17 +17,15 @@
   gather_facts: false
 
   vars:
-    group_list: []
-    check_ptf_groups_against_fix_repo_repo_server: "{{repo_server}}"
-    check_ptf_groups_against_fix_repo_type: "latest"
+    fix_install_path: ""
 
   tasks:
-    - name: Compare the groups
-      ansible.builtin.include_role:
-        name: check_ptf_groups_against_fix_repo
-      vars:
-        check_ptf_groups_against_fix_repo_group_list: "{{ group_list }}"
-
-    - name: Print group status
-      ansible.builtin.debug:
-        var: check_ptf_groups_against_fix_repo_group_status
+    - name: Install a list of PTFs of LPP 5733SC1 from image catalog
+    ibm.power_ibmi.ibmi_fix_imgclg:
+      src: '{{ fix_install_path }}'
+      apply_type: '*DLYALL'
+      hiper_only: False
+      use_temp_path: True
+      rollback: True
+      become_user: "QSECOFR"
+      become_user_password: "PASSWORD"

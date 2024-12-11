@@ -14,6 +14,7 @@
     - name: Display crtlib debug message text
       ansible.builtin.debug:
         msg: 
+          - "rc: {{ crt_lib_result.rc }}"
           - "cmd: {{ crt_lib_result.cmd }}"
           - "msgid: {{ crt_lib_result.job_log[0].MESSAGE_ID }}"
           - "msgtype: {{ crt_lib_result.job_log[0].MESSAGE_TYPE }}"
@@ -29,6 +30,7 @@
     - name: Display crtlib again debug message text
       ansible.builtin.debug:
         msg: 
+          - "rc: {{ crt_lib_repeated_result.rc }}"
           - "cmd: {{ crt_lib_repeated_result.cmd }}"
           - "msgid: {{ crt_lib_repeated_result.job_log[0].MESSAGE_ID }}"
           - "msgtype: {{ crt_lib_repeated_result.job_log[0].MESSAGE_TYPE }}"
@@ -48,6 +50,7 @@
     - name: Display dltlib debug message text
       ansible.builtin.debug:
         msg:
+          - "rc: {{ dlt_lib_result.rc }}"
           - "cmd: {{ dlt_lib_result.cmd }}"
           - "msgid: {{ dlt_lib_result.job_log[0].MESSAGE_ID }}"
           - "msgtype: {{ dlt_lib_result.job_log[0].MESSAGE_TYPE }}"

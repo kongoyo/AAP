@@ -60,4 +60,4 @@
         use_temp_path: True
         rollback: True
         become_user: "QSECOFR"
-        become_user_pass: "PASSWORD"
+        become_user_password: "PASSWORD"

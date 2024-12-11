@@ -15,7 +15,7 @@
       ibmi_cl_command:
         cmd: crtlib lib(ansiblei)
         joblog: true
-      register: crt_lib_repeated_result
+      register: crt_lib_repeated_result.joblog
       ignore_errors: true
 
     - name: Display crtlib again debug message text

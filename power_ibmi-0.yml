@@ -22,7 +22,7 @@
       ansible.builtin.debug:
         msg: 
           - "cmd: {{ crt_lib_repeated_result.cmd }}"
-          - "msgtxt: {{ crt_lib_repeated_result.joblog.MESSAGE_TEXT }}"
+          - "msgtxt: {{ crt_lib_repeated_result.job_log[0].MESSAGE_TEXT }}"
 
     - name: Assert the repeating creation of the library failed
       ansible.builtin.assert:

@@ -17,7 +17,7 @@
         order_list: '{{ download_fix_status_order_list }}'
         become_user: "QSECOFR"
         become_user_password: "PASSWORD"
-      register: "{{ download_fix_status_info }}"
+      register: download_fix_status_info
 
     - name: Display fix downloading check status
       ansible.builtin.debug:

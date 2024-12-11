@@ -6,13 +6,13 @@
     - ibm.power_ibmi
 
   vars: 
-    check_ptf_groups_fix_repo_list:
+    check_ptf_groups_against_fix_repo_group_list:
       - "SF99750"
       - "SF99959"
       - "SF99958"
       - "SF99957"
-    check_ptf_groups_fix_repo_type: "current"
-    check_ptf_groups_fix_repo_repo_server: 172.16.14.61
+    check_ptf_groups_against_fix_repo_type: "current"
+    check_ptf_groups_against_fix_repo_repo_server: "172.16.14.61"
 
     ptf_group_number: "{{ ptf_group_number }}"      
 

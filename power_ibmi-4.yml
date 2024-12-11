@@ -17,7 +17,7 @@
         src: '{{ fix_install_path }}'
         apply_type: '*DLYALL'
         hiper_only: False
-        use_temp_path: True
+        use_temp_path: False
         rollback: True
         become_user: "QSECOFR"
         become_user_password: "PASSWORD"

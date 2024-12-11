@@ -3,9 +3,23 @@
   hosts: all
   gather_facts: false
   collections:
-    - ibm.power_ibmi      
+    - ibm.power_ibmi
+
+  vars: 
+    ptf_group_number: "{{ ptf_group_number }}"      
 
   tasks:
+    - name: Retrieve the latest PTF group information from PSP server
+      ibmi_fix_check:
+        groups: "{{ ptf_group_number }}"
+      register: fix_check_result
+    
+    - name: Display the fix_check_result
+      ansible.builtin.debug: 
+        msg: 
+          - "rc: {{ fix_check_result.rc | int }}"
+          - "group_info: {{ fix_check_result.group_info }}"
+
     - name: Do module authority check
       ibm.power_ibmi.ibmi_module_authority_check:
         modulelist:

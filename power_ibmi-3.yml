@@ -35,8 +35,8 @@
           ansible.builtin.debug:
             msg: "PTF group information is already in catalog or is already downloading, quit play"
 
-        - name: End host
-          ansible.builtin.meta: end_host
+      #  - name: End host
+      #    ansible.builtin.meta: end_host
 
     - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
       ansible.builtin.include_role:

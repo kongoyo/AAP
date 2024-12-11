@@ -1,14 +1,30 @@
 ---
-- name: Playbook with CL command examples
+- name: Playbook examples
   hosts: all
   gather_facts: false
   collections:
     - ibm.power_ibmi
 
   vars: 
+    check_ptf_groups_fix_repo_list:
+      - "SF99750"
+      - "SF99959"
+      - "SF99958"
+      - "SF99957"
+    check_ptf_groups_fix_repo_type: "current"
+    check_ptf_groups_fix_repo_repo_server: "172.16.14.61"
+
     ptf_group_number: "{{ ptf_group_number }}"      
 
   tasks:
+    - name: IBM i check a set of groups
+      ansible.builtin.include_role:
+        name: check_ptf_groups_against_fix_repo
+    
+    - name: print groups status
+      debug: 
+        var: check_ptf_groups_against_fix_repo_group_status
+
     - name: Retrieve the latest PTF group information from PSP server
       ibmi_fix_check:
         groups: "{{ ptf_group_number }}"

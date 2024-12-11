@@ -18,6 +18,12 @@
       register: crt_lib_repeated_result
       ignore_errors: true
 
+    - name: Display debug message text
+      ansible.builtin.debug:
+        msg: 
+          - "STDOUT: {{ crt_lib_repeated_result.stdout }}"
+          - "STDERR: {{ crt_lib_repeated_result.stderr }}"
+
     - name: Assert the repeating creation of the library failed
       ansible.builtin.assert:
         that:

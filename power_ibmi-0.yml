@@ -15,7 +15,7 @@
         var: check_ptf_groups_against_fix_repo_group_status
 
     - name: Retrieve the latest PTF group information from PSP server
-      ibmi_fix_check:
+      ibm.power_ibmi.ibmi_fix_check:
         groups: "{{ ptf_group_number }}"
       register: fix_check_result
     

@@ -3,9 +3,9 @@
 
   vars:
       fix_repo_check_ptf_group_fix_group_check_result: "SF99750"
-      fix_repo_check_ptf_group_ptf_group_find_result:
-      fix_repo_check_ptf_group_download_status_find_result:
-      fix_repo_check_ptf_group_check_ptf_group_fail:
+      # fix_repo_check_ptf_group_ptf_group_find_result:
+      # fix_repo_check_ptf_group_download_status_find_result:
+      # fix_repo_check_ptf_group_check_ptf_group_fail:
 
   tasks:
       - name: Include fix_repo_check_ptf_group role to check if the latest ptf group is already in catalog

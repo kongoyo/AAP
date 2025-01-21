@@ -1,18 +1,16 @@
 ---
 - name: Playbook examples
-  hosts: all
+  hosts: ibmi75
   gather_facts: false
-  collections:
-    - ibm.power_ibmi
 
   tasks:
+    - name: ping IBM i 
+      
     - name: IBM i check a set of groups
       ansible.builtin.include_role:
         name: check_ptf_groups_against_fix_repo
-    
-    - name: print groups status
-      debug: 
-        var: check_ptf_groups_against_fix_repo_group_status
+        debug:
+          var: check_ptf_groups_against_fix_repo_group_status
 
     - name: Retrieve the latest PTF group information from PSP server
       ibm.power_ibmi.ibmi_fix_check:

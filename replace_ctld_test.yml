@@ -1,0 +1,13 @@
+---
+- name: Replace IBM i Enterprise Extender controller
+  hosts: "{{ target_server | default (['172.16.13.58']) }}"
+
+  tasks:
+    - name: Return ibmi_facts
+      ibm.power_ibmi.ibmi_facts:
+
+
+    - name: Assert a fact returned by ibmi_facts
+      ansible.builtin.assert:
+        that:
+          - system_name == 'CLARK75'

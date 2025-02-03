@@ -51,9 +51,30 @@
 ## green.example.com
 ## blue.example.com
 
+[hmcs]
+172.16.13.222
+
+[hmcs:vars]
+ansible_ssh_user=hscroot
+
+[ibmireadonly]
+172.16.13.34 ansible_ssh_user=ibmecs
+
+[ibmireadonly:vars]
+ansible_python_interpreter="/QOpensys/pkgs/bin/python3"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
 [ibmi75]
 172.16.13.58 ansible_ssh_user=ibmecs
+172.16.13.121 ansible_ssh_user=clark
 
 [ibmi75:vars]
+ansible_python_interpreter="/QOpensys/pkgs/bin/python3"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[ibmi74]
+172.16.13.57 ansible_ssh_user=ibmecs
+
+[ibmi74:vars]
 ansible_python_interpreter="/QOpensys/pkgs/bin/python3"
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

@@ -1,0 +1,98 @@
+# Execute below command to collect hmcs managed system facts
+# ansible-playbook  /root/AAP/hmcs_collect_system_facts.yml -J -vvv
+# password vault is hmcspw, vault password is 'abc123'
+---
+- name: Poweroff and modify system configurations and resource settings and then poweron managed system
+  hosts: hmcs
+  connection: local
+  vars:
+    curr_hmc_auth:
+      username: hscroot
+      password: !vault |
+                $ANSIBLE_VAULT;1.1;AES256
+                34366463646137333134636636666232656639636535643332313338643763653565346438326538
+                3936336331333861663665613535303364646135623861380a623933633065396435363361643233
+                64346366653533643132366462313038353037396339323131666638623764393535633937376239
+                6137643336643864350a323962323933366463666666643533663736613931363766333661623661
+                6163
+
+  tasks:
+    - name: List managed system details
+      ibm.power_hmc.power_system:
+        hmc_host: '{{ inventory_hostname }}'
+        hmc_auth: "{{ curr_hmc_auth }}"
+        system_name: 4F-PSD-8286-41A-SN68F48DW
+        state: facts
+      register: testout
+
+    - name: List current system_info
+      ansible.builtin.debug:
+        msg: 'ActivatedServicePackNameAndLevel: {{ testout.system_info.ActivatedServicePackNameAndLevel }}'
+
+    - name: List managed system performance configurations
+      ibm.power_hmc.power_system:
+        hmc_host: '{{ inventory_hostname }}'
+        hmc_auth: "{{ curr_hmc_auth }}"
+        system_name: 4F-PSD-8286-41A-SN68F48DW
+        state: pcm_facts
+      register: pcmout
+
+    - name: List current performance_info
+      ansible.builtin.debug:
+        msg: '{{ pcmout }}'
+
+    - name: List managed vm system details
+      ibm.power_hmc.powervm_lpar_instance:
+        hmc_host: '{{ inventory_hostname }}'
+        hmc_auth: "{{ curr_hmc_auth }}"
+        vm_name: Ktest
+        state: facts
+      register: vm_facts
+
+    - name: List current vm fact_info
+      ansible.builtin.debug:
+        msg: '{{ vm_facts }}'
+
+# Sample output as below.
+#
+#    "system_info": {
+#        "ActivatedLevel": "82",
+#        "ActivatedServicePackNameAndLevel": "FW860.20 (82)",
+#        "BMCVersion": null,
+#        "CapacityOnDemandMemoryCapable": "true",
+#        "CapacityOnDemandProcessorCapable": "true",
+#        "ConfigurableSystemMemory": 65536,
+#        "ConfigurableSystemProcessorUnits": 4,
+#        "CurrentAvailableSystemMemory": 24896,
+#        "CurrentAvailableSystemProcessorUnits": 2.5,
+#        "DeferredLevel": null,
+#        "DeferredServicePackNameAndLevel": null,
+#        "Description": "",
+#        "IPAddress": "172.16.13.27",
+#        "InstalledSystemMemory": 65536,
+#        "InstalledSystemProcessorUnits": 4,
+#        "IsClassicHMCManagement": "true",
+#        "IsNotPowerVMManagementController": "false",
+#        "IsNotPowerVMManagementMaster": "false",
+#        "IsPowerVMManagementController": "false",
+#        "IsPowerVMManagementMaster": "false",
+#        "MTMS": "8286-41A*68F48DW",
+#        "ManufacturingDefaultConfigurationEnabled": "false",
+#        "MaximumPartitions": 80,
+#        "MemoryDefragmentationState": "Not_In_Progress",
+#        "MergedReferenceCode": " ",
+#        "MeteredPoolID": null,
+#        "PNORVersion": null,
+#        "PermanentSystemMemory": 65536,
+#        "PermanentSystemProcessors": 4,
+#        "PhysicalSystemAttentionLEDState": "true",
+#        "ProcessorThrottling": "false",
+#        "ReferenceCode": " ",
+#        "ServiceProcessorVersion": "0008000C",
+#        "State": "operating",
+#        "StateDetail": "",
+#        "SystemFirmware": "SV860_FW860.20 (82)",
+#        "SystemLocation": "",
+#        "SystemName": "4F-PSD-8286-41A-SN68F48DW",
+#        "SystemType": "fsp"
+#    }

@@ -1,0 +1,93 @@
+---
+- name: IBM i fix management
+  hosts: "{{ repo_server | default(['172.16.13.58']) }}"
+
+  tasks:
+    # Check PSP Part - [需要網際網路] 從PSP取得最新的PTF group資訊 並檢查是否已下載
+    - name: Set required variable
+      ansible.builtin.set_fact:
+        fix_repo_check_ptf_group_ptf_group: "{{ ptf_group | default(['SF99662']) }}"
+
+    - name: Include fix_repo_check_ptf_group role to check if the latest ptf group is already in catalog
+      ansible.builtin.include_role:
+        name: fix_repo_check_ptf_group
+
+    - name: Block for success_list not exists
+      when: fix_repo_check_ptf_group_ptf_group_find_result.success_list is not defined
+      block:
+        - name: Set required flag
+          ansible.builtin.set_fact:
+            success_list_exist: false
+
+    - name: Block for success_list exists
+      when: fix_repo_check_ptf_group_ptf_group_find_result.success_list is defined
+      block:
+        - name: Set required flag
+          ansible.builtin.set_fact:
+            success_list_exist: true
+
+    # Download PTF Part - [需要網際網路] 從IBM i主機執行SNDPTFORD下載所需PTF Group 並更新紀錄
+    - name: Set required variable
+      ansible.builtin.set_fact:
+        fix_repo_download_add_ptf_group_ptf_group_info: "{{ fix_repo_check_ptf_group_fix_group_check_result.group_info[0] }}"
+
+    - name: Block for download PTF when success_list exists
+      when: success_list_exist is false
+      block:
+        - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
+          ansible.builtin.include_role:
+            name: fix_repo_download_add_ptf_group
+        - name: Print msg
+          ansible.builtin.debug:
+            msg: |
+              "After order {{ fix_repo_download_add_ptf_group_download_fix_result.order_id }} is complete, \
+              call fix_repo_extract_ptf_group_info role to extract ptf group information into catalog."
+        - name: Set required variable
+          ansible.builtin.set_fact:
+            order_id: "{{ fix_repo_download_add_ptf_group_download_fix_result.order_id }}"
+
+    - name: Block for download PTF when success_list exists
+      when: success_list_exist is true
+      block:
+        - name: Set required variable
+          ansible.builtin.set_fact:
+            order_id: "{{ fix_repo_check_ptf_group_ptf_group_find_result.success_list[0].order_id }}"
+
+    - name: Print order_id
+      ansible.builtin.debug:
+        msg: "{{ order_id }}"
+
+    # Check download Part - 檢查下載是否已完成
+    - name: Set required variable
+      ansible.builtin.set_fact:
+        fix_repo_extract_ptf_group_info_order_id: "{{ order_id }}"
+
+    - name: Include fix_repo_extract_ptf_group_info role to get the order information in download_status table
+      ansible.builtin.include_role:
+        name: fix_repo_extract_ptf_group_info
+
+    - name: Checking whether the fix downloading complete
+      ibm.power_ibmi.ibmi_download_fix_status:
+        order_list: '{{ fix_repo_extract_ptf_group_info_order_id }}'
+        become_user: "QSECOFR"
+        become_user_password: "PASSWORD"
+      register: download_fix_status_info
+      until: download_fix_status_info.status[0].download_status == "DOWNLOADED"
+      retries: 100
+      delay: 120
+
+    # Install PTF Part - 從IBM i主機執行INSPTF並更新紀錄
+    - name: Install selected fixes from image catalog
+      ibm.power_ibmi.ibmi_fix_imgclg:
+        src: '{{ download_fix_status_info.status[0].file_path }}'
+        apply_type: '*DLYALL'
+        hiper_only: false
+        use_temp_path: false
+        rollback: true
+        become_user: "QSECOFR"
+        become_user_password: "PASSWORD"
+      register: fix_install_path_info
+
+    - name: Display selected fixes installed information
+      ansible.builtin.debug:
+        msg: '{{ fix_install_path_info }}'

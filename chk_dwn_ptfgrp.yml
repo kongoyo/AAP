@@ -1,3 +1,8 @@
+# Command example: 
+# ansible-playbook  /root/AAP/chk_dwn_ptfgrp.yml -e "{'repo_server':'172.16.13.58', 'ptf_group':'SF99663' }"
+# Parameter example:
+# 'repo_server': 'IP Addr'
+# 'ptf_group': 'SF99663'
 ---
 - name: IBM i fix management
   hosts: "{{ repo_server | default(['172.16.13.58']) }}"

@@ -1,0 +1,17 @@
+# Test on Windows 11
+
+---
+- name: Get windows 11 facts
+  hosts: "{{ winserver | default(['192.168.31.153']) }}"
+
+  tasks:
+    - name: Get product id and product key
+      ansible.windows.win_product_facts:
+
+    - name: Display Windows edition
+      ansible.builtin.debug:
+        var: ansible_os_license_edition
+
+    - name: Display Windows license status
+      ansible.builtin.debug:
+        var: ansible_os_license_status

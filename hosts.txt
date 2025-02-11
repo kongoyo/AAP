@@ -51,6 +51,10 @@
 ## green.example.com
 ## blue.example.com
 
+[winserver]
+192.168.31.153
+
+
 [hmcs]
 172.16.13.222
 

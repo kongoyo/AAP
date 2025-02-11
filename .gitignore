@@ -3905,3 +3905,6 @@ lib/python3.12/site-packages/pip-24.0.dist-info/WHEEL
 .venv/bin/yamllint
 .ansible/.lock
 .vscode/settings.json
+.devcontainer/devcontainer.json
+.devcontainer/docker/devcontainer.json
+.devcontainer/podman/devcontainer.json

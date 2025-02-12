@@ -1,59 +1,14 @@
-# This is the default ansible 'hosts' file.
-#
-# It should live in /etc/ansible/hosts
-#
-#   - Comments begin with the '#' character
-#   - Blank lines are ignored
-#   - Groups of hosts are delimited by [header] elements
-#   - You can enter hostnames or ip addresses
-#   - A hostname/ip can be a member of multiple groups
-
-# Ex 1: Ungrouped hosts, specify before any group headers:
-
-## green.example.com
-## blue.example.com
-## 192.168.100.1
-## 192.168.100.10
-
-# Ex 2: A collection of hosts belonging to the 'webservers' group:
-
-## [webservers]
-## alpha.example.org
-## beta.example.org
-## 192.168.1.100
-## 192.168.1.110
-
-# If you have multiple hosts following a pattern, you can specify
-# them like this:
-
-## www[001:006].example.com
-
-# You can also use ranges for multiple hosts: 
-
-## db-[99:101]-node.example.com
-
-# Ex 3: A collection of database servers in the 'dbservers' group:
-
-## [dbservers]
-##
-## db01.intranet.mydomain.net
-## db02.intranet.mydomain.net
-## 10.25.1.56
-## 10.25.1.57
-
-# Ex4: Multiple hosts arranged into groups such as 'Debian' and 'openSUSE':
-
-## [Debian]
-## alpha.example.org
-## beta.example.org
-
-## [openSUSE]
-## green.example.com
-## blue.example.com
-
 [winserver]
-192.168.31.153
+172.16.13.5
 
+[winserver:vars]
+ansible_user=stevec
+ansible_password=P@ssw0rd
+ansible_connection=winrm
+ansible_port=5985
+ansible_winrm_scheme=http
+ansible_winrm_transport=ntlm
+ansible_winrm_server_cert_validation=ignore
 
 [hmcs]
 172.16.13.222
@@ -61,16 +16,9 @@
 [hmcs:vars]
 ansible_ssh_user=hscroot
 
-[ibmireadonly]
-172.16.13.34 ansible_ssh_user=ibmecs
-
-[ibmireadonly:vars]
-ansible_python_interpreter="/QOpensys/pkgs/bin/python3"
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-
 [ibmi75]
-172.16.13.58 ansible_ssh_user=ibmecs
-172.16.13.121 ansible_ssh_user=clark
+172.16.13.58 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
+172.16.13.121 ansible_ssh_user=clark ansible_ssh_password=clark
 
 [ibmi75:vars]
 ansible_python_interpreter="/QOpensys/pkgs/bin/python3"

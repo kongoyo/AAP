@@ -1,0 +1,23 @@
+---
+- name: IBM i test playbook
+  hosts: "{{ ibmiserver | default(['172.16.13.58']) }}"
+
+  vars:
+        cur_become_user: IBMECS
+        repo_server: 172.16.13.58
+        # ptf_group: SF99750
+        # ptf_group_number: SF99750
+
+  tasks:
+        - name: Add some group records
+          ibm.power_ibmi.ibmi_fix_repo:
+                action: 'add'
+                type: 'ptf_group'
+                checksum: true
+                parameters:
+                      - {'order_id':'2503442367', 'file_path':'/QIBM/UserData/OS/Service/ECS/PTF/2503442367'}
+          register: fix_repo_info
+
+        - name: Display some group records
+          ansible.builtin.debug:
+                var: fix_repo_info

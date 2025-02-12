@@ -1,17 +1,35 @@
 # Test on Windows 11
 
 ---
-- name: Get windows 11 facts
-  hosts: "{{ winserver | default(['192.168.31.153']) }}"
+- name: Get windows server facts
+  hosts: "{{ winserver | default(['172.16.13.5']) }}"
 
   tasks:
     - name: Get product id and product key
-      ansible.windows.win_product_facts:
+      community.windows.win_product_facts:
+      register: win_product_infomation
 
     - name: Display Windows edition
       ansible.builtin.debug:
-        var: ansible_os_license_edition
+        var: win_product_infomation
 
-    - name: Display Windows license status
+#    - name: Set autologon for user stevec
+#      community.windows.win_auto_logon:
+#        username: stevec
+#        password: str0ngp@ssw0rd
+
+    - name: Get disk facts
+      community.windows.win_disk_facts:
+      register: windiskfacts_info
+
+    - name: Display Windows Disk Info
       ansible.builtin.debug:
-        var: ansible_os_license_status
+        var: windiskfacts_info
+
+    - name: Get info for all installed features
+      community.windows.win_feature_info:
+      register: feature_info
+
+    - name: Display info for all installed features
+      ansible.builtin.debug:
+        var: feature_info

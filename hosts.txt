@@ -20,6 +20,7 @@ ansible_ssh_user=hscroot
 172.16.13.121 ansible_ssh_user=clark ansible_ssh_password=clark
 172.16.13.58 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
 172.16.13.57 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
+172.16.13.56 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
 
 [ibmitest:vars]
 ansible_python_interpreter="/QOpensys/pkgs/bin/python3"

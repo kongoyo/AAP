@@ -9,15 +9,8 @@
         # ptf_group_number: SF99750
 
   tasks:
-        - name: Add some group records
-          ibm.power_ibmi.ibmi_fix_repo:
-                action: 'add'
-                type: 'ptf_group'
-                checksum: true
-                parameters:
-                      - {'order_id':'2503442367', 'file_path':'/QIBM/UserData/OS/Service/ECS/PTF/2503442367'}
-          register: fix_repo_info
-
-        - name: Display some group records
-          ansible.builtin.debug:
-                var: fix_repo_info
+        - name: Fetch objlib libary on a remote IBM i to local, store as /backup/objlib.file.
+          ibm.power_ibmi.ibmi_fetch:
+                lib_name: 'testlib'
+                dest: './backup'
+                flat: true

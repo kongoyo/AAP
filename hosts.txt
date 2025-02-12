@@ -16,11 +16,12 @@ ansible_winrm_server_cert_validation=ignore
 [hmcs:vars]
 ansible_ssh_user=hscroot
 
-[ibmi75]
-172.16.13.58 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
+[ibmitest]
 172.16.13.121 ansible_ssh_user=clark ansible_ssh_password=clark
+172.16.13.58 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
+172.16.13.57 ansible_ssh_user=ibmecs ansible_ssh_password=ibmecsusr
 
-[ibmi75:vars]
+[ibmitest:vars]
 ansible_python_interpreter="/QOpensys/pkgs/bin/python3"
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 

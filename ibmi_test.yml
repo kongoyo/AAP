@@ -1,16 +1,36 @@
+# 執行CL指令，抓取錯誤rc和訊息(用CRTLIB和DLTLIB測試)
+# become_user_password儲存在vault_become_password.yml中的vault_ibmecs_become_password，並使用ansible-vault加密
+# 發生錯誤時畫面顯示rc、command、job_info和job_message
+
 ---
 - name: IBM i test playbook
   hosts: "{{ ibmiserver | default(['172.16.13.58']) }}"
 
-  vars:
-        cur_become_user: IBMECS
-        repo_server: 172.16.13.58
-        # ptf_group: SF99750
-        # ptf_group_number: SF99750
+  vars_files:
+    - vault_become_password.yml
 
   tasks:
-        - name: Fetch objlib libary on a remote IBM i to local, store as /backup/objlib.file.
-          ibm.power_ibmi.ibmi_fetch:
-                lib_name: 'testlib'
-                dest: './backup'
-                flat: true
+    - name: Create library
+      ibm.power_ibmi.ibmi_cl_command:
+        become_user: IBMECS
+        become_user_password: "{{ vault_ibmecs_become_password }}"
+        cmd: 'CRTLIB LIB(TESTLIB)'
+      ignore_errors: true
+      register: crtlib_joblog
+
+    - name: Display failed message when previous task was failed
+      when: crtlib_joblog.rc != 0
+      block:
+        - name: 
+          ansible.builtin.debug:
+            msg:
+              - "Reason code is {{ crtlib_joblog.rc }}"
+              - "Error CMD is {{ (crtlib_joblog.stderr | from_yaml).error }}"
+              - "Job information is {{ crtlib_joblog.job_name }}"
+              - "Job message is {{ (crtlib_joblog.job_log[0] | from_yaml).MESSAGE_TEXT }}"
+
+    # - name: Fetch objlib libary on a remote IBM i to local, store as /backup/objlib.file.
+    #   ibm.power_ibmi.ibmi_fetch:
+    #     lib_name: 'testlib'
+    #     dest: './backup'
+    #     flat: true

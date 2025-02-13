@@ -1,0 +1,31 @@
+# 執行qshell指令，抓取錯誤rc和訊息(用mkdir測試)
+# 發生錯誤時畫面顯示rc、cmd、job_message
+
+---
+- name: IBM i test playbook
+  hosts: "{{ ibmiserver | default(['172.16.13.58']) }}"
+
+  vars_files:
+    - vault_become_password.yml
+
+  tasks:
+    - name: Run Check Product Option (CHKPRDOPT) command to verify that licensed programs are fully installed.
+      ibm.power_ibmi.ibmi_cl_command:
+        become_user: IBMECS
+        become_user_password: "{{ vault_ibmecs_become_password }}"
+        cmd: 'CHKPRDOPT *OPSYS DETAIL(*FULL)'
+        is_cmd5250: True
+      register: chkprdopt_info        
+
+    - name: Display normal result
+      ansible.builtin.debug:
+        msg: Result is {{ chkprdopt_info.stdout }}
+
+    - name: Display error message when previous task failed
+      when: chkprdopt_info.rc != 0
+      block:
+        - name:
+          ansible.builtin.debug:
+            msg:
+              - "Reason code is {{ chkprdopt_info.rc }}"
+              - "Job message is {{ chkprdopt_info.stderr }}"

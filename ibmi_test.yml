@@ -10,7 +10,7 @@
     - vault_become_password.yml
 
   tasks:
-    - name: Create library
+    - name: Create a library
       ibm.power_ibmi.ibmi_cl_command:
         become_user: IBMECS
         become_user_password: "{{ vault_ibmecs_become_password }}"

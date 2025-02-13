@@ -1,0 +1,23 @@
+# 執行qshell指令，抓取錯誤rc和訊息(用mkdir測試)
+# 發生錯誤時畫面顯示rc、cmd、job_message
+
+---
+- name: IBM i test playbook
+  hosts: "{{ ibmiserver | default(['172.16.13.58']) }}"
+
+  tasks:
+    - name: Remove a directory
+      ansible.builtin.command:
+        cmd: "rmdir /home/ibmecs/ibmitest1/"
+      ignore_errors: true
+      register: mkdir_joblog
+
+    - name: Display error message when previous task failed
+      when: mkdir_joblog.rc != 0
+      block:
+        - name:
+          ansible.builtin.debug:
+            msg:
+              - "Reason code is {{ mkdir_joblog.rc }}"
+              - "Error CMD is {{ mkdir_joblog.cmd }}"
+              - "Job message is {{ mkdir_joblog.stderr }}"

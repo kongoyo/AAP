@@ -1,0 +1,45 @@
+---
+- name: IBM i test playbook
+  hosts: "{{ ibmiserver | default(['172.16.13.58']) }}"
+  vars_files:
+    - vault_become_password.yml
+
+  tasks:
+    - name: Check TESTLIB exists
+      ibm.power_ibmi.ibmi_cl_command:
+        cmd: 'CHKOBJ OBJ(QSYS/TESTLIB) OBJTYPE(*LIB)'
+      register: chkobj_log
+      ignore_errors: true
+
+    - name: Create library if not exists
+      when: chkobj_log.rc != '0'
+      ibm.power_ibmi.ibmi_cl_command:
+        cmd: 'CRTLIB LIB(STEVE1)'
+        become_user: ibmecs
+        become_user_password: "{{ vault_ibmecs_become_password }}"
+        joblog: false
+      register: crtlib_log
+      ignore_errors: true
+
+    - name: Display previous task crtlib_log
+      when: crtlib_joblog.rc != '0'
+      - loop:
+        ansible.builtin.debug:
+        msg:
+          - "Message text : {{ crtlib_log.msg }}"
+
+    - name: Fetch objects or a library from a remote IBM i node and store on local
+      ibm.power_ibmi.ibmi_fetch:
+        dest: /home/ibmecs/backup
+        lib_name: STEVE1
+        object_names: MAINP1
+        object_types: '*FILE'
+      register: fetch_log
+      ignore_errors: true
+
+    - name: Display previous task fetch_log
+      when: fetch_log.rc != '0'
+      ansible.builtin.debug:
+        msg:
+          - "Message text : {{ fetch_log.msg }}"
+          - "rc : {{ fetch_log.rc }}"

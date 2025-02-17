@@ -1,7 +1,8 @@
 ---
 - name: WSL test program
-  hosts: 172.16.13.58
-  vars_files: 'vault_become_password.yml'
+  hosts: '172.16.13.58'
+  vars_files: 
+    - vault_become_password.yml
 
   tasks:
     - name: Self ping
@@ -22,8 +23,14 @@
       ansible.builtin.debug:
         msg: Ping success~!
 
-    - name: SQL insert 
+    - name: SQL insert (500 iterations of all 3 statements)
       ibm.power_ibmi.ibmi_sql_execute:
-        sql: "INSERT INTO STEVE/DMGOBJ VALUES(1, 'STEVE', 'DMGOBJ', '*FILE', '')"
+        sql: "{{ item }}"
         become_user: 'IBMECS'
         become_user_password: "{{ vault_ibmecs_become_password }}"
+      loop: "{{ sql_statements * 500 }}"
+      vars:
+        sql_statements:
+          - "insert into steve.dmgobj values('1','STEVE1','DMGOBJ1','*FILE','')"
+          - "insert into steve.dmgobj values('2','STEVE2','DMGOBJ2','*FILE','')"
+          - "insert into steve.dmgobj values('3','STEVE3','DMGOBJ3','*FILE','')"

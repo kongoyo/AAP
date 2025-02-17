@@ -1,0 +1,29 @@
+---
+- name: WSL test program
+  hosts: 172.16.13.58
+  vars_files: 'vault_become_password.yml'
+
+  tasks:
+    - name: Self ping
+      ansible.builtin.ping:
+      register: ping_log
+
+    - name: Check ping status
+      ansible.builtin.debug:
+        msg: "{{ ping_log }}"
+
+    - name: Check ping status 1"
+      when: ping_log.ping != 'pong'
+      ansible.builtin.debug:
+        msg: Ping failed~!
+
+    - name: Check ping status 2
+      when: not ping_log.failed
+      ansible.builtin.debug:
+        msg: Ping success~!
+
+    - name: SQL insert 
+      ibm.power_ibmi.ibmi_sql_execute:
+        sql: "INSERT INTO STEVE/DMGOBJ VALUES(1, 'STEVE', 'DMGOBJ', '*FILE', '')"
+        become_user: 'IBMECS'
+        become_user_password: "{{ vault_ibmecs_become_password }}"

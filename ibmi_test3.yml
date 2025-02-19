@@ -22,11 +22,10 @@
       ignore_errors: true
 
     - name: Display previous task crtlib_log
-      when: crtlib_joblog.rc != '0'
-      - loop:
-        ansible.builtin.debug:
+      ansible.builtin.debug:
         msg:
           - "Message text : {{ crtlib_log.msg }}"
+      when: crtlib_joblog.rc != '0'
 
     - name: Fetch objects or a library from a remote IBM i node and store on local
       ibm.power_ibmi.ibmi_fetch:

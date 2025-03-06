@@ -1,4 +1,4 @@
-# Command example: 
+# Command example:
 # ansible-playbook  /root/AAP/fixmgmt_chkptfgrpcurrent.yml -e "{'repo_server':'172.16.13.58', 'ptf_group':'SF99663' }"
 # Parameter example:
 # 'repo_server': 'IP Addr'

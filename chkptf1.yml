@@ -16,8 +16,6 @@
     - name: Include fix_repo_check_download_individual_ptfs role to download a list of individual ptfs
       ansible.builtin.include_role:
         name: ibm.power_ibmi.fix_repo_check_download_individual_ptfs
-        become_user: ibmecs
-        become_user_password: ibmecsusr
       register: fix_repo_check_download_individual_ptfs_Info
 
 #

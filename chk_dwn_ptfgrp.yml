@@ -4,6 +4,7 @@
 # 'repo_server': 'IP Addr'
 # 'ptf_group': 'SF99663'
 ---
+
 - name: IBM i fix management
   hosts: "{{ repo_server | default(['172.16.13.58']) }}"
 
@@ -15,7 +16,7 @@
 
     - name: Include fix_repo_check_ptf_group role to check if the latest ptf group is already in catalog
       ansible.builtin.include_role:
-        name: fix_repo_check_ptf_group
+        name: ibm.power_ibmi.fix_repo_check_ptf_group
 
     - name: Block for success_list not exists
       when: fix_repo_check_ptf_group_ptf_group_find_result.success_list is not defined
@@ -41,11 +42,12 @@
       block:
         - name: Include fix_repo_download_add_ptf_group role to download the ptf group and add information into catalog download_status table
           ansible.builtin.include_role:
-            name: fix_repo_download_add_ptf_group
+            name: ibm.power_ibmi.fix_repo_download_add_ptf_group
         - name: Print msg
           ansible.builtin.debug:
             msg: |
               "After order {{ fix_repo_download_add_ptf_group_download_fix_result.order_id }} is complete, \
+
               call fix_repo_extract_ptf_group_info role to extract ptf group information into catalog."
         - name: Set required variable
           ansible.builtin.set_fact:
@@ -69,7 +71,7 @@
 
     - name: Include fix_repo_extract_ptf_group_info role to get the order information in download_status table
       ansible.builtin.include_role:
-        name: fix_repo_extract_ptf_group_info
+        name: ibm.power_ibmi.fix_repo_extract_ptf_group_info
 
     - name: Checking whether the fix downloading complete
       ibm.power_ibmi.ibmi_download_fix_status:
@@ -89,10 +91,26 @@
         hiper_only: false
         use_temp_path: false
         rollback: true
+        joblog: true
         become_user: "QSECOFR"
         become_user_password: "PASSWORD"
       register: fix_install_path_info
+      ignore_errors: true
 
-    - name: Display selected fixes installed information
+    - name: Display selected fixes installed information type 1
+      when: fix_install_path_info.changed and fix_install_path_info.job_log is defined
       ansible.builtin.debug:
-        msg: '{{ fix_install_path_info }}'
+        var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | list
+
+
+    - name: Display selected fixes installed information type 2
+      when: not fix_install_path_info.changed and fix_install_path_info.job_log is defined
+      block:
+        - name: Display job_log debug debug message
+          ansible.builtin.debug:
+            var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | list
+
+#    - name: Display selected fixes installed information type 2
+#      ansible.builtin.debug:
+#        msg: "{{ item }}"
+#      loop: "{{ fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | list }}"

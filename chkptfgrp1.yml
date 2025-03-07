@@ -100,7 +100,7 @@
     - name: Display selected fixes installed information type 1
       when: fix_install_path_info.changed and fix_install_path_info.job_log is defined
       ansible.builtin.debug:
-        var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | list
+        var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | select("search", "installed") | list
 
 
     - name: Display selected fixes installed information type 2
@@ -108,7 +108,7 @@
       block:
         - name: Display job_log debug debug message
           ansible.builtin.debug:
-            var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | list
+            var: fix_install_path_info.job_log | map(attribute='MESSAGE_TEXT') | select("search", "installed") | list
 
 #    - name: Display selected fixes installed information type 2
 #      ansible.builtin.debug:
